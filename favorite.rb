@@ -1,14 +1,22 @@
-gem("rspec-rails", :group => "test")
 gem("haml-rails")
-gem("factory_girl_rails")
-gem("cucumber-rails")
-gem("capybara")
+
+gem("factory_girl_rails", :group => "test")
+gem("cucumber-rails", :group => "test")
+gem("capybara", :group => "test")
+gem("rspec-rails", :group => "test")
+if RUBY_VERSION =~ /1.8/
+  gem "ruby-debug"
+else
+  gem "ruby-debug19"
+end
+
 
 remove_file 'public/index.html'
 remove_file 'rm public/images/rails.png'
 run 'cp config/database.yml config/database.example'
 run "echo 'config/database.yml' >> .gitignore"
 
+remove_dir "test"
 generate 'rspec:install'
 inject_into_file 'spec/spec_helper.rb', "\nrequire 'factory_girl'", :after => "require 'rspec/rails'"
 
@@ -24,6 +32,7 @@ inject_into_file 'config/application.rb', :after => "config.filter_parameters +=
     end
   eos
 end
+
 
 directory("~/web_sites/rails-templates/sass-twitter-bootstrap/lib", "app/assets/stylesheets")
 
